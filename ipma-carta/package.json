@@ -14,8 +14,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "ipma-carta.helloWorld",
-        "title": "Hello World"
+        "command": "ipma-carta.showWeatherMap",
+        "title": "IPMA Weather Map"
       },
       {
         "command": "ipma-carta.reloadIPMA",
