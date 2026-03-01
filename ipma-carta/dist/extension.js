@@ -35,6 +35,10 @@ __export(extension_exports, {
 });
 module.exports = __toCommonJS(extension_exports);
 var vscode = __toESM(require("vscode"));
+var fs = __toESM(require("fs"));
+var path = __toESM(require("path"));
+var os = __toESM(require("os"));
+var import_playwright = require("playwright");
 function activate(context) {
   console.log('Congratulations, your extension "ipma-carta" is now active!');
   const disposable = vscode.commands.registerCommand("ipma-carta.showWeatherMap", () => {
@@ -80,8 +84,59 @@ function activate(context) {
     </body>
     </html>`;
   });
-  const reload = vscode.commands.registerCommand("ipma-carta.reloadIPMA", () => {
-    vscode.window.showInformationMessage("RELOAD IPMA data!");
+  const reload = vscode.commands.registerCommand("ipma-carta.reloadIPMA", async () => {
+    const link = "https://www.ipma.pt/pt/otempo/prev.numerica/index.jsp";
+    const browser = await import_playwright.chromium.launch({ headless: false });
+    const browserContext = await browser.newContext();
+    const page = await browserContext.newPage();
+    const storageDir = context.globalStorageUri ? context.globalStorageUri.fsPath : context.globalStoragePath || path.join(os.homedir(), ".ipma-carta-images");
+    if (!fs.existsSync(storageDir)) fs.mkdirSync(storageDir, { recursive: true });
+    const dataDir = storageDir;
+    const downloadedUrls = /* @__PURE__ */ new Set();
+    let counter = 0;
+    page.on("response", async (response) => {
+      const url = response.url();
+      if (url.includes("/resources.www/data/previsao/numerica/cartas/") && url.endsWith(".png")) {
+        if (!downloadedUrls.has(url) && response.status() === 200) {
+          downloadedUrls.add(url);
+          try {
+            const buffer = await response.body();
+            const filename = `img-${String(counter).padStart(3, "0")}.png`;
+            const filepath = path.join(dataDir, filename);
+            fs.writeFileSync(filepath, buffer);
+            console.log(`Intercepted: ${filepath}`);
+            vscode.window.showInformationMessage(`Downloaded: ${filepath}`);
+            counter++;
+          } catch (e) {
+          }
+        }
+      }
+    });
+    try {
+      console.log("Navigating to IPMA...");
+      await page.goto(link, { waitUntil: "networkidle", timeout: 6e4 });
+      const playButtonSelector = 'img[name="Image5"]';
+      for (let i = 0; i < 78; i++) {
+        await page.waitForSelector(playButtonSelector, { state: "attached" });
+        await page.click(playButtonSelector);
+        await page.waitForFunction(
+          (selector) => {
+            const img = document.querySelector(selector);
+            return img && img.naturalWidth > 0;
+          },
+          playButtonSelector,
+          { timeout: 3e4 }
+        );
+        await page.waitForTimeout(500);
+      }
+      vscode.window.showInformationMessage(`Successfully downloaded ${counter} map images!`);
+    } catch (error) {
+      console.error("Error during page navigation:", error);
+      vscode.window.showErrorMessage("Failed to load IPMA website.");
+    } finally {
+      await browser.close();
+      console.log("Browser closed.");
+    }
   });
   context.subscriptions.push(disposable);
   context.subscriptions.push(reload);

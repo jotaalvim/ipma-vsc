@@ -35,7 +35,16 @@ async function main() {
 		sourcesContent: false,
 		platform: 'node',
 		outfile: 'dist/extension.js',
-		external: ['vscode'],
+		// treat our browser automation libraries as external so we don’t bundle them
+		external: [
+			'vscode',
+			'playwright',
+			'playwright-core',
+			'puppeteer-core',
+			'playwright/*',
+			'playwright-core/*',
+			'puppeteer-core/*'
+		],
 		logLevel: 'silent',
 		plugins: [
 			/* add to the end of plugins array */
