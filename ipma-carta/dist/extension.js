@@ -89,7 +89,8 @@ function activate(context) {
     const browser = await import_playwright.chromium.launch({ headless: false });
     const browserContext = await browser.newContext();
     const page = await browserContext.newPage();
-    const storageDir = context.globalStorageUri ? context.globalStorageUri.fsPath : context.globalStoragePath || path.join(os.homedir(), ".ipma-carta-images");
+    const baseStorage = context.globalStorageUri ? context.globalStorageUri.fsPath : context.globalStoragePath || path.join(os.homedir(), ".ipma-carta-images");
+    const storageDir = path.join(baseStorage, "myplugin");
     if (!fs.existsSync(storageDir)) fs.mkdirSync(storageDir, { recursive: true });
     const dataDir = storageDir;
     const downloadedUrls = /* @__PURE__ */ new Set();
@@ -101,7 +102,9 @@ function activate(context) {
           downloadedUrls.add(url);
           try {
             const buffer = await response.body();
-            const filename = `img-${String(counter).padStart(3, "0")}.png`;
+            const now = /* @__PURE__ */ new Date();
+            const dateStr = now.toISOString().replace(/[:.]/g, "-");
+            const filename = `${dateStr}-${String(counter).padStart(3, "0")}.png`;
             const filepath = path.join(dataDir, filename);
             fs.writeFileSync(filepath, buffer);
             console.log(`Intercepted: ${filepath}`);

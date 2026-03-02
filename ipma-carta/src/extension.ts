@@ -13,7 +13,6 @@ export function activate(context: vscode.ExtensionContext) {
 
 
 	console.log('Congratulations, your extension "ipma-carta" is now active!');
-
 		
 	const disposable = vscode.commands.registerCommand('ipma-carta.showWeatherMap', () => {
         const panel = vscode.window.createWebviewPanel(
@@ -72,9 +71,12 @@ export function activate(context: vscode.ExtensionContext) {
         const browserContext = await browser.newContext();
         const page = await browserContext.newPage();
 
-        const storageDir = context.globalStorageUri
+        // base storage path (global shared folder)
+        const baseStorage = context.globalStorageUri
           ? context.globalStorageUri.fsPath
           : (context.globalStoragePath || path.join(os.homedir(), '.ipma-carta-images'));
+        // use a dedicated subfolder for this plugin
+        const storageDir = path.join(baseStorage, 'myplugin');
         if (!fs.existsSync(storageDir)) fs.mkdirSync(storageDir, { recursive: true });
         const dataDir = storageDir;
 
@@ -90,7 +92,10 @@ export function activate(context: vscode.ExtensionContext) {
                 try {
                   
                     const buffer = await response.body();
-                    const filename = `img-${String(counter).padStart(3, '0')}.png`;
+                    // include current date in ISO format for uniqueness
+                    const now = new Date();
+                    const dateStr = now.toISOString().replace(/[:.]/g, '-');
+                    const filename = `${dateStr}-${String(counter).padStart(3, '0')}.png`;
                     const filepath = path.join(dataDir, filename);
                     fs.writeFileSync(filepath, buffer);
                     console.log(`Intercepted: ${filepath}`);
