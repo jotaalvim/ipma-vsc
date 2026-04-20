@@ -1,71 +1,123 @@
-# ipma-carta README
+# ipma-carta
 
-This is the README for your extension "ipma-carta". After writing up a brief description, we recommend including the following sections.
+Visual Studio Code extension that loads the IPMA weather forecast map sequence, builds an MP4 animation, and displays it directly in a VS Code webview.
 
-## Features
+## What It Does
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+- Adds the command `IPMA Weather Map` (`ipma-carta.showWeatherMap`).
+- Downloads forecast map frames from IPMA (PNG sequence).
+- Converts frames into `weather_output.mp4` using ffmpeg.
+- Caches generated media locally and reuses it while still fresh.
+- Opens the result in a VS Code webview with playback controls.
 
-For example if there is an image subfolder under your extension project workspace:
+## How It Works
 
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+1. Command is triggered from Command Palette.
+2. Extension checks whether a cached video already exists and is fresh.
+3. If refresh is needed, it launches Chromium with Playwright, captures IPMA map frames, and saves them to local storage.
+4. It runs ffmpeg to convert the image sequence into MP4.
+5. The MP4 is shown inside VS Code.
 
 ## Requirements
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+- VS Code `1.109.0` or newer.
+- Node.js `18+` (recommended for extension development).
+- ffmpeg installed and available in `PATH`.
+
+Install ffmpeg:
+
+- macOS (Homebrew): `brew install ffmpeg`
+- Ubuntu/Debian: `sudo apt-get install ffmpeg`
+- Windows (winget): `winget install Gyan.FFmpeg`
+
+Playwright should install browser binaries with dependencies, but if needed run:
+
+`npx playwright install chromium`
+
+## Storage Location
+
+Generated files are saved at:
+
+`~/.ipma-carta-images/ipma-cartas`
+
+Main output file:
+
+`weather_output.mp4`
+
+## Usage
+
+1. Open Command Palette.
+2. Run `IPMA Weather Map`.
+3. Wait for the first generation (may take longer on first run).
+4. The animation opens in a VS Code panel.
+
+If webview playback fails, use the fallback button to open the video externally.
+
+## Development
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Build once:
+
+```bash
+npm run compile
+```
+
+Watch mode (TypeScript + esbuild):
+
+```bash
+npm run watch
+```
+
+Package for publishing:
+
+```bash
+npm run package
+```
+
+## Testing
+
+Compile tests:
+
+```bash
+npm run compile-tests
+```
+
+Run test suite:
+
+```bash
+npm test
+```
+
+Continuous test watch:
+
+```bash
+npm run watch-tests
+```
 
 ## Extension Settings
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+This extension currently does not contribute custom VS Code settings.
 
-For example:
+## Troubleshooting
 
-This extension contributes the following settings:
+- Error: `ffmpeg is not installed or not in PATH`
+	Install ffmpeg and restart VS Code.
+- No frames downloaded
+	The IPMA page structure or network responses may have changed; try again later and check logs.
+- Browser launch issues
+	Run `npx playwright install chromium` and retry.
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+## Known Limitations
 
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
+- Depends on IPMA website structure and resource URLs.
+- Requires external ffmpeg binary.
+- Refresh behavior is time-based and local-cache dependent.
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+See [CHANGELOG.md](CHANGELOG.md) for version history.

@@ -16,10 +16,6 @@
       {
         "command": "ipma-carta.showWeatherMap",
         "title": "IPMA Weather Map"
-      },
-      {
-        "command": "ipma-carta.reloadIPMA",
-        "title": "Reload IPMA Weather Data"
       }
     ]
   },
