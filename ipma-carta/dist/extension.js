@@ -121,7 +121,7 @@ async function reloadIpmaData(showCompletionMessage) {
           fs.writeFileSync(filepath, buffer);
           console.log(`Intercepted: ${filepath}`);
           if (counter % 5 === 0) {
-            vscode.window.showWarningMessage(`Downloading weather map images (${counter + 1})/78 from IPMA. Please wait...`);
+            vscode.window.showWarningMessage(`Downloading weather map images ${counter + 3}/78 from IPMA. Please wait...`);
           }
           counter++;
         } catch {
