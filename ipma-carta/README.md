@@ -2,49 +2,35 @@
 
 Visual Studio Code extension that loads the IPMA weather forecast map sequence, builds an MP4 animation, and displays it directly in a VS Code webview.
 
-## What It Does
-
-- Adds the command `IPMA Weather Map` (`ipma-carta.showWeatherMap`).
-- Downloads forecast map frames from IPMA (PNG sequence).
-- Converts frames into `weather_output.mp4` using ffmpeg.
-- Caches generated media locally and reuses it while still fresh.
-- Opens the result in a VS Code webview with playback controls.
-
-## How It Works
-
-1. Command is triggered from Command Palette.
-2. Extension checks whether a cached video already exists and is fresh.
-3. If refresh is needed, it launches Chromium with Playwright, captures IPMA map frames, and saves them to local storage.
-4. It runs ffmpeg to convert the image sequence into MP4.
-5. The MP4 is shown inside VS Code.
+[gif](media/output.gif)
 
 ## Requirements
 
 - VS Code `1.109.0` or newer.
-- Node.js `18+` (recommended for extension development).
-- ffmpeg installed and available in `PATH`.
+- Node.js `18+` (for development).
+- `ffpem`/`ffmpeg` installed and available in `PATH`.
 
-Note: in this extension, ffmpeg is executed as a system command (`ffmpeg -version`), so it is a machine prerequisite and should not be added to `package.json` as a normal npm dependency.
+This extension runs `ffmpeg` as a system command (`ffmpeg -version`). It is required on your machine and is not an npm dependency.
 
-Install ffmpeg:
+Install `ffmpeg`:
 
 - macOS (Homebrew): `brew install ffmpeg`
 - Ubuntu/Debian: `sudo apt-get install ffmpeg`
 - Windows (winget): `winget install Gyan.FFmpeg`
 
-Playwright should install browser binaries with dependencies, but if needed run:
+If Chromium is missing for Playwright:
 
-`npx playwright install chromium`
+```bash
+npx playwright install chromium
+```
 
-## Storage Location
+## What It Does
 
-Generated files are saved at:
-
-`~/.ipma-carta-images/ipma-cartas`
-
-Main output file:
-
-`weather_output.mp4`
+- Adds command `IPMA Weather Map` (`ipma-carta.showWeatherMap`).
+- Downloads IPMA weather map frames.
+- Creates `weather_output.mp4` with `ffmpeg`.
+- Reuses a fresh local cache.
+- Opens video in a VS Code webview.
 
 ## Usage
 
@@ -55,27 +41,23 @@ Main output file:
 
 If webview playback fails, use the fallback button to open the video externally.
 
-## Development
+Output location:
 
-Install dependencies:
+- `~/.ipma-carta-images/ipma-cartas/weather_output.mp4`
+
+## Development
 
 ```bash
 npm install
 ```
 
-Build once:
-
 ```bash
 npm run compile
 ```
 
-Watch mode (TypeScript + esbuild):
-
 ```bash
 npm run watch
 ```
-
-Package for publishing:
 
 ```bash
 npm run package
@@ -83,42 +65,26 @@ npm run package
 
 ## Testing
 
-Compile tests:
-
 ```bash
 npm run compile-tests
 ```
-
-Run test suite:
 
 ```bash
 npm test
 ```
 
-Continuous test watch:
-
 ```bash
 npm run watch-tests
 ```
 
-## Extension Settings
-
-This extension currently does not contribute custom VS Code settings.
-
 ## Troubleshooting
 
-- Error: `ffmpeg is not installed or not in PATH`
-	Install ffmpeg and restart VS Code.
-- No frames downloaded
-	The IPMA page structure or network responses may have changed; try again later and check logs.
-- Browser launch issues
-	Run `npx playwright install chromium` and retry.
-
-## Known Limitations
-
-- Depends on IPMA website structure and resource URLs.
-- Requires external ffmpeg binary.
-- Refresh behavior is time-based and local-cache dependent.
+- `ffmpeg is not installed or not in PATH`:
+  install `ffmpeg` and restart VS Code.
+- No frames downloaded:
+  IPMA structure/network may have changed; retry later and check logs.
+- Browser launch issues:
+  run `npx playwright install chromium`.
 
 ## Release Notes
 

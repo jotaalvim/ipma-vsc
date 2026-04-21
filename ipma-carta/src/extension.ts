@@ -85,9 +85,11 @@ async function reloadIpmaData(showCompletionMessage: boolean): Promise<boolean> 
 
     const downloadedUrls = new Set<string>();
     let counter = 0;
+    
 
     page.on('response', async (response: Response) => {
         const url = response.url();
+
 
         if (url.includes("/resources.www/data/previsao/numerica/cartas/") && url.endsWith(".png")) {
             if (!downloadedUrls.has(url) && response.status() === 200) {
@@ -98,6 +100,9 @@ async function reloadIpmaData(showCompletionMessage: boolean): Promise<boolean> 
                     const filepath = path.join(dataDir, filename);
                     fs.writeFileSync(filepath, buffer);
                     console.log(`Intercepted: ${filepath}`);
+                    if (counter % 5 === 0) {
+                    vscode.window.showWarningMessage(`Downloading weather map images (${counter + 1})/78 from IPMA. Please wait...`);
+                    }
                     counter++;
                 } catch {
                     // Ignore errors where the body might no longer be available.
