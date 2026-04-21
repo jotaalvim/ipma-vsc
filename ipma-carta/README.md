@@ -24,6 +24,8 @@ Visual Studio Code extension that loads the IPMA weather forecast map sequence, 
 - Node.js `18+` (recommended for extension development).
 - ffmpeg installed and available in `PATH`.
 
+Note: in this extension, ffmpeg is executed as a system command (`ffmpeg -version`), so it is a machine prerequisite and should not be added to `package.json` as a normal npm dependency.
+
 Install ffmpeg:
 
 - macOS (Homebrew): `brew install ffmpeg`
