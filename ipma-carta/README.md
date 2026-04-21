@@ -2,7 +2,7 @@
 
 Visual Studio Code extension that loads the IPMA weather forecast map sequence, builds an MP4 animation, and displays it directly in a VS Code webview.
 
-[gif](media/output.gif)
+![ipmagif](media/output.gif)
 
 ## Requirements
 
@@ -32,7 +32,7 @@ npx playwright install chromium
 - Reuses a fresh local cache.
 - Opens video in a VS Code webview.
 
-## Usage
+# Usage
 
 1. Open Command Palette.
 2. Run `IPMA Weather Map`.
