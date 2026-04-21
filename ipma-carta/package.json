@@ -1,7 +1,12 @@
 {
   "name": "ipma-carta",
   "displayName": "ipma-carta",
+  "publisher" : "jotaalvim",
   "description": "weather map with precipitation, air pressure, wind ",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jotaalvim/ipma-vsc.git"
+  },
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.109.0"
@@ -34,6 +39,7 @@
     "test": "vscode-test"
   },
   "devDependencies": {
+    "@types/jest": "^30.0.0",
     "@types/mocha": "^10.0.10",
     "@types/node": "^22.19.13",
     "@types/vscode": "^1.109.0",
