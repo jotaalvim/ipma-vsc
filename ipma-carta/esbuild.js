@@ -36,7 +36,9 @@ async function main() {
 		platform: 'node',
 		outfile: 'dist/extension.js',
 		external: [
-			'vscode'
+			'vscode',
+			'playwright',
+			'playwright-core'
 		],
 		logLevel: 'silent',
 		plugins: [
