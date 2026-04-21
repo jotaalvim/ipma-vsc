@@ -2,6 +2,7 @@
   "name": "ipma-carta",
   "displayName": "ipma-carta",
   "publisher": "jotaalvim",
+  "icon" : "assets/logo.png",
   "description": "weather map with precipitation, air pressure, wind ",
   "repository": {
     "type": "git",
