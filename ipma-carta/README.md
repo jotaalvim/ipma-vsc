@@ -6,23 +6,10 @@ Visual Studio Code extension that loads the IPMA weather forecast map sequence, 
 
 ## Requirements
 
-- VS Code `1.109.0` or newer.
-- Node.js `18+` (for development).
 - `ffpem`/`ffmpeg` installed and available in `PATH`.
 
-This extension runs `ffmpeg` as a system command (`ffmpeg -version`). It is required on your machine and is not an npm dependency.
+It is required on your machine and is not an npm dependency.
 
-Install `ffmpeg`:
-
-- macOS (Homebrew): `brew install ffmpeg`
-- Ubuntu/Debian: `sudo apt-get install ffmpeg`
-- Windows (winget): `winget install Gyan.FFmpeg`
-
-If Chromium is missing for Playwright:
-
-```bash
-npx playwright install chromium
-```
 
 ## What It Does
 
@@ -32,7 +19,8 @@ npx playwright install chromium
 - Reuses a fresh local cache.
 - Opens video in a VS Code webview.
 
-# Usage
+
+## Usage
 
 1. Open Command Palette.
 2. Run `IPMA Weather Map`.
@@ -45,37 +33,6 @@ Output location:
 
 - `~/.ipma-carta-images/ipma-cartas/weather_output.mp4`
 
-## Development
-
-```bash
-npm install
-```
-
-```bash
-npm run compile
-```
-
-```bash
-npm run watch
-```
-
-```bash
-npm run package
-```
-
-## Testing
-
-```bash
-npm run compile-tests
-```
-
-```bash
-npm test
-```
-
-```bash
-npm run watch-tests
-```
 
 ## Troubleshooting
 
@@ -86,6 +43,3 @@ npm run watch-tests
 - Browser launch issues:
   run `npx playwright install chromium`.
 
-## Release Notes
-
-See [CHANGELOG.md](CHANGELOG.md) for version history.

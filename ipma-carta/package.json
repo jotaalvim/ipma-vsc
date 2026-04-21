@@ -14,7 +14,9 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onCommand:ipma-carta.showWeatherMap"
+  ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [

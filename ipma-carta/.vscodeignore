@@ -1,8 +1,13 @@
 .vscode/**
 .vscode-test/**
 out/**
-node_modules/**
 src/**
+.env
+**/.env
+**/.env.*
+**/*.pem
+**/*.key
+**/*token*
 .gitignore
 .yarnrc
 esbuild.js
